@@ -1,0 +1,194 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+  Meal System — "মেসের খাতা"
+  Banana-leaf green for structure, turmeric for the meal plates,
+  pomegranate red only for dues. Paper is a cool green-white, never cream.
+*/
+:root {
+  --paper: #f1f5f1;
+  --surface: #ffffff;
+  --surface-2: #e7eee8;
+  --ink: #15211d;
+  --ink-2: #4a5a54;
+  --ink-3: #7b8a84;
+  --line: #d4ded7;
+  --leaf: #0e5a47;
+  --leaf-2: #137257;
+  --leaf-soft: #dcebe2;
+  --turmeric: #e3a414;
+  --turmeric-ink: #6b4a00;
+  --turmeric-soft: #fbefcc;
+  --due: #b4233c;
+  --due-soft: #f8e1e5;
+  --plus: #0f7a52;
+  --plus-soft: #d9f0e4;
+  --focus: #e3a414;
+  color-scheme: light;
+}
+
+.dark {
+  --paper: #0d1512;
+  --surface: #131e1a;
+  --surface-2: #1a2823;
+  --ink: #e4ede8;
+  --ink-2: #a9b9b2;
+  --ink-3: #74867f;
+  --line: #26372f;
+  --leaf: #5cc29d;
+  --leaf-2: #79d2b0;
+  --leaf-soft: #17352a;
+  --turmeric: #f0bb3a;
+  --turmeric-ink: #f6d47e;
+  --turmeric-soft: #3a2f12;
+  --due: #f17b90;
+  --due-soft: #3b1a21;
+  --plus: #5fd39f;
+  --plus-soft: #143326;
+  --focus: #f0bb3a;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-line: var(--line);
+  --color-leaf: var(--leaf);
+  --color-leaf-2: var(--leaf-2);
+  --color-leaf-soft: var(--leaf-soft);
+  --color-turmeric: var(--turmeric);
+  --color-turmeric-ink: var(--turmeric-ink);
+  --color-turmeric-soft: var(--turmeric-soft);
+  --color-due: var(--due);
+  --color-due-soft: var(--due-soft);
+  --color-plus: var(--plus);
+  --color-plus-soft: var(--plus-soft);
+
+  --font-sans: "Hind Siliguri", system-ui, sans-serif;
+  --font-display: "Baloo Da 2", "Hind Siliguri", system-ui, sans-serif;
+
+  --radius-plate: 999px;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2.5px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Ledger ruling: faint horizontal lines like a hisab khata */
+.ledger-rule {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent calc(2.75rem - 1px),
+    var(--line) calc(2.75rem - 1px),
+    var(--line) 2.75rem
+  );
+}
+
+/* Meal plate — the one memorable element */
+.plate {
+  --size: 2.5rem;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 999px;
+  display: inline-grid;
+  place-items: center;
+  border: 2px dashed var(--line);
+  background: var(--surface);
+  color: var(--ink-3);
+  transition: background-color 160ms ease, border-color 160ms ease, transform 120ms ease;
+  position: relative;
+}
+.plate[data-on="true"] {
+  border: 2px solid var(--turmeric);
+  background: radial-gradient(circle at 50% 50%, var(--turmeric) 0 58%, var(--turmeric-soft) 60% 100%);
+  color: #3d2a00;
+}
+.plate:not(:disabled):active {
+  transform: scale(0.92);
+}
+.plate:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+.plate[data-on="true"]:disabled {
+  opacity: 0.7;
+}
+
+@keyframes plate-pop {
+  0% { transform: scale(0.85); }
+  60% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+.plate[data-on="true"][data-fresh="true"] {
+  animation: plate-pop 220ms ease-out;
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+.hero-rise > * {
+  animation: rise 520ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.hero-rise > *:nth-child(2) { animation-delay: 80ms; }
+.hero-rise > *:nth-child(3) { animation-delay: 160ms; }
+.hero-rise > *:nth-child(4) { animation-delay: 240ms; }
+
+@keyframes sheet-in {
+  from { transform: translateY(16px); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+.sheet-in {
+  animation: sheet-in 200ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Thin, quiet scrollbars for horizontal tables */
+.scroll-x {
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+@media print {
+  .no-print { display: none !important; }
+}
